@@ -44,7 +44,7 @@ public class ModuleLoader implements Loader<Module>{
     public List<Class<? extends Module>> load(String path, @Deprecated Class annotation, @Deprecated Class superClass) throws ClassNotFoundException, IOException, Module.ModuleInfoException, URISyntaxException {
         List<Class<? extends Module>> c = new ArrayList<>();
 
-        JarFile jar = new JarFile(path);
+        JarFile jar = ReflectionUtil.getJarFileFromPath(path);
         Enumeration<JarEntry> entries = jar.entries();
         //URLClassLoader urlCLASS = new URLClassLoader(new URL[]{new URL(path)}, this.getClass().getClassLoader());
         while (entries.hasMoreElements()) {
