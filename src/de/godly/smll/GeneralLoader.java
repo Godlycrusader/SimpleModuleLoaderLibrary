@@ -22,7 +22,6 @@ public class GeneralLoader implements Loader{
         while (entries.hasMoreElements()) {
             String next = entries.nextElement().toString();
             next = next.replaceAll("/", ".");
-            //EconomyServer.getInstance().getLogger().log(Level.INFO,next);
             if (!next.endsWith(".class")) continue;
             next = next.replace(".class", "");
             Class<?> cls = Class.forName(next);
