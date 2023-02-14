@@ -25,6 +25,8 @@ public class SimpleModuleLoader {
     @Getter
     public URLClassLoader mainClassLoader;
 
+
+    public boolean running = true;
     public File modulesFile = new File(".", "modules");
 
     /**
@@ -37,6 +39,7 @@ public class SimpleModuleLoader {
         try {
             if (!modulesFile.exists()) modulesFile.mkdirs();
             List<URL> urls = new ArrayList<>();
+            //TODO: Get all possible Module jar files in subfolder modules
             Arrays.stream(modulesFile.listFiles()).filter(file -> file.getName().endsWith(".jar")).forEach(file -> {
                 try {
                     urls.add(file.toURI().toURL());
@@ -44,7 +47,9 @@ public class SimpleModuleLoader {
                     e.printStackTrace();
                 }
             });
+            //TODO: Add this jar itself so we can load ModulePrio1.class & ModulePrio5.class
             urls.add(SimpleModuleLoader.this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toURL());
+            //TODO: Instantiate our URLClassLoader with the URLs cause they cant be changed later cause "security threat"
             mainClassLoader = new URLClassLoader(urls.toArray(new URL[0]), SimpleModuleLoader.class.getClassLoader());
             ModuleLoader loader = new ModuleLoader();
             List<Class<? extends Module>> toLoad = new ArrayList<>();
@@ -55,7 +60,7 @@ public class SimpleModuleLoader {
                     e.printStackTrace();
                 }
             });
-            toLoad.stream().forEach(clsToLoad -> {
+            toLoad.forEach(clsToLoad -> {
                 try {
                     //TODO: Instantiate Module Classes
                     Constructor<? extends Module> moduleConst = clsToLoad.getConstructor();
@@ -85,6 +90,9 @@ public class SimpleModuleLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
+        while (INSTANCE.running) {
+        }
+        INSTANCE.loadedModules.forEach(Module::onUnload);
+    }
 }
