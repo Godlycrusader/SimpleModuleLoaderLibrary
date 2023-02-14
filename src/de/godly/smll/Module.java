@@ -30,7 +30,6 @@ public abstract class Module implements Comparable<Module>{
         return this.getClass().getAnnotation(ModuleInfo.class).priority();
     }
 
-
     public static class ModuleInfoException extends Exception {
 
         public String message;

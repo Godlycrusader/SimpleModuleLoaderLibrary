@@ -31,16 +31,15 @@ public class SimpleModuleLoader {
      * @throws URISyntaxException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws Module.ModuleInfoException
      */
-    public SimpleModuleLoader() throws URISyntaxException, IOException, ClassNotFoundException, Module.ModuleInfoException {
+    public SimpleModuleLoader() {
         INSTANCE = this;
         try {
             if (!modulesFile.exists()) modulesFile.mkdirs();
             List<URL> urls = new ArrayList<>();
             Arrays.stream(modulesFile.listFiles()).filter(file -> file.getName().endsWith(".jar")).forEach(file -> {
                 try {
-                    urls.add(file.toURL());
+                    urls.add(file.toURI().toURL());
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
